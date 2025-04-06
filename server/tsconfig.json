@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    /* Language and Environment */
+    "target": "es2016",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "typeRoots": ["./node_modules/@types", "./types"],
+
+    /* Modules */
+    "module": "commonjs",
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Type Checking */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictPropertyInitialization": true,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "skipLibCheck": true
+  },
+  "include": ["*.ts", "./types/**/*.d.ts"], /* Include root-level TypeScript files and type definitions. */
+  "exclude": ["node_modules", "dist"]       /* Exclude unnecessary folders. */
+}
