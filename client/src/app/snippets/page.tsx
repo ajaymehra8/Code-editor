@@ -8,7 +8,7 @@ import { BookOpen, Grid, Layers, Search, Tag, X } from "lucide-react";
 import SnippetCard from "./_components/SnippetCard";
 import Image from "next/image";
 
-const snippetPage = () => {
+const SnippetPage = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
   const [view, setView] = useState<"grid" | "list">("grid");
@@ -222,4 +222,4 @@ const snippetPage = () => {
   );
 };
 
-export default snippetPage;
+export default SnippetPage;
