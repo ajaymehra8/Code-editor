@@ -2,7 +2,7 @@
 import { useGlobalState } from "@/context/GlobalProvider";
 import { Star } from "lucide-react";
 
-const StarButton = ({ snippetId }: { snippetId: number }) => {
+const StarButton = ({ snippetId }: { snippetId: string }) => {
   const { user } = useGlobalState();
   const isStarred = false;
   const starCount = 3;

@@ -1,5 +1,5 @@
 "use client";
-import { CodeEditorState, ExecutionResult, UserType } from "@/types/allTypes";
+import { CodeEditorState, ExecutionResult, Snippet, UserType } from "@/types/allTypes";
 import {
   createContext,
   useContext,
@@ -16,6 +16,10 @@ interface GlobalContextType extends CodeEditorState {
   setUser: React.Dispatch<React.SetStateAction<UserType | null>>;
   token: string;
   setToken: React.Dispatch<React.SetStateAction<string>>;
+  openSignupModal:boolean;
+  setOpenSignupModal: React.Dispatch<React.SetStateAction<boolean>>;
+  snippets:Snippet[];
+  setSnippets: React.Dispatch<React.SetStateAction<Snippet[]>>;
 }
 
 // Create context with a default value
@@ -25,12 +29,15 @@ const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserType | null>(null);
   const [token, setToken] = useState<string>("");
+  const [openSignupModal, setOpenSignupModal] = useState<boolean>(false);
+
   const [language, setLanguage] = useState<string>("javascript");
   const [theme, setTheme] = useState<string>("vs-dark");
   const [fontSize, setFontSize] = useState<number>(16);
   const [editorInstance, setEditorInstance] =
     useState<monaco.editor.IStandaloneCodeEditor | null>(null);
   const [isRunning, setIsRunning] = useState(false);
+  const [snippets,setSnippets]=useState<Snippet[]>([]);
   const [output, setOutput] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [executionResult, setExecutionResult] =
@@ -132,7 +139,6 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const fetchUserDetails = async () => {
     const storedUser = localStorage.getItem("user");
     const token = localStorage.getItem("token");
-
     if (!storedUser || !token) {
       setUser(null);
       setToken("");
@@ -148,6 +154,15 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
       setUser(null);
     }
   };
+
+  useEffect(() => {
+    document.body.style.overflow = openSignupModal ? "hidden" : "auto";
+
+    // Optional cleanup
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [openSignupModal]);
 
   useEffect(() => {
     fetchUserDetails();
@@ -189,6 +204,10 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         setError,
         executionResult,
         setExecutionResult,
+        openSignupModal,
+        setOpenSignupModal,
+        snippets,
+        setSnippets
       }}
     >
       {children}

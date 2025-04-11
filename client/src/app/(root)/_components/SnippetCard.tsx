@@ -2,29 +2,45 @@
 import { useGlobalState } from "@/context/GlobalProvider";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Clock, StarIcon, Trash2, User } from "lucide-react";
+import { Clock, Trash2, User } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import StarButton from "@/components/StarButton";
+import { AxiosError } from "axios";
+import toast from "react-hot-toast";
+import { deleteSnippet } from "../../../utils/api";
+import { UserType } from "@/types/allTypes";
 
 interface SnippetCardProps {
   snippet: {
-    _id: number;
-    title?: string;
-    language?: string;
-    user?: {
-      name: string;
-    };
+    _id: string;
+    title: string;
+    language: string;
+    user: UserType;
     createdAt: Date;
     code: string;
   };
 }
 const SnippetCard = ({ snippet }: SnippetCardProps) => {
-  const { user } = useGlobalState();
+  const { user, setSnippets } = useGlobalState();
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     // FUNCTION TO DELETE A SNIPPET
+    setIsDeleting(true);
+    try {
+      const { data } = await deleteSnippet(snippet._id);
+      if (data.success) {
+        setSnippets((prevSnippets) =>
+          prevSnippets.filter((s) => s?._id !== snippet?._id)
+        );
+        toast.success(data.message);
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) toast.error(err?.response?.data?.message);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -34,7 +50,7 @@ const SnippetCard = ({ snippet }: SnippetCardProps) => {
       transition={{ duration: 0.2 }}
       layout
     >
-      <Link href={`/snippets/${snippet._id}`} className="h-full block">
+      <Link href={`/${snippet._id}`} className="h-full block">
         <div
           className="relative h-full bg-[#1e1e2e]/80 backdrop-blur-sm rounded-xl 
           border border-[#313244]/50 hover:border-[#313244] 
@@ -80,7 +96,7 @@ const SnippetCard = ({ snippet }: SnippetCardProps) => {
                 <StarButton snippetId={snippet._id} />
 
                 {/* come here after backend */}
-                {"Ajay" === snippet?.user?.name && (
+                {user?._id === snippet?.user?._id && (
                   <div className="z-10" onClick={(e) => e.preventDefault()}>
                     <button
                       onClick={handleDelete}

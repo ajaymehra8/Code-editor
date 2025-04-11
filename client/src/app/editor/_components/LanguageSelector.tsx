@@ -1,7 +1,7 @@
 "use client";
 import { useGlobalState } from "@/context/GlobalProvider";
 import React, { useRef, useState } from "react";
-import { LANGUAGE_CONFIG } from "../_constants";
+import { LANGUAGE_CONFIG } from "../../(root)/_constants";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDownIcon, Lock, Sparkles } from "lucide-react";

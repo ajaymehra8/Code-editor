@@ -1,17 +1,16 @@
 "use client"
 import { useGlobalState } from '@/context/GlobalProvider';
 import React, { useEffect, useState } from 'react'
-import { defineMonacoThemes, LANGUAGE_CONFIG } from '../_constants';
+import { defineMonacoThemes, LANGUAGE_CONFIG } from '../../(root)/_constants';
 import { Editor } from '@monaco-editor/react';
 import Image from 'next/image';
 import { RotateCcwIcon, ShareIcon, TypeIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { EditorPanelSkeleton, EditorViewSkeleton } from './EditorPanelSkelton';
 import useMounted from '@/hooks/useMounted';
 import ShareSnippetDialog from './ShareSnippetDialog';
 const EditorPanel = () => {
 const [isShareDialogOpen,setIsShareDialogOpen]=useState<boolean>(false);
-const {language,theme,fontSize,editor,setFontSize,setEditor,user}=useGlobalState();
+const {language,theme,fontSize,editor,setFontSize,setEditor}=useGlobalState();
 const mounted=useMounted();
 useEffect(()=>{
 const savedCode=localStorage.getItem(`editor-code-${language}`);
