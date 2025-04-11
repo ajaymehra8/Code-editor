@@ -1,4 +1,4 @@
-import {  Response, NextFunction } from "express";
+import {  Request,Response, NextFunction } from "express";
 import User from "../models/userModel";
 import AppError from "../utils/AppError";
 import catchAsync from "../utils/catchAsync";
@@ -8,6 +8,8 @@ import dns from "dns";
 import crypto from "crypto";
 import { MyRequest } from "../types/local";
 import jwt from "jsonwebtoken";
+import {oauth2client} from "../config/googleOauth";
+import axios from 'axios';
 
 // Define OTP storage
 interface OtpStore {
@@ -144,7 +146,6 @@ export const signup = catchAsync(
 export const login = catchAsync(
   async (req: MyRequest, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
-    console.log(email, password);
     if (!email || !password) {
       return next(new AppError(400, "Please provide all required fields"));
     }
@@ -170,6 +171,32 @@ export const login = catchAsync(
   }
 );
 
+// google login
+export const googleLogin = catchAsync(async (req:Request, res:Response) => {
+    const { code } = req.query;
+    const googleRes = await oauth2client.getToken(code as string);
+    oauth2client.setCredentials(googleRes.tokens);
+
+    const userRes = await axios.get(
+      `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`
+    );
+    const {email,name,picture}=userRes.data;
+    let user=await User.findOne({email});
+    if(!user){
+      user=await User.create({email,name,image:picture});
+    }
+    const token=createJwt(user);
+    res.status(201).json({
+      success:true,
+      user,
+      token,
+      message:'Login successfully'
+    }
+    )
+  
+});
+
+
 // isProtect (check if user is logged in)
 export const isProtect = catchAsync(
   async (req: MyRequest, res: Response, next: NextFunction) => {
@@ -187,6 +214,7 @@ export const isProtect = catchAsync(
       });
       return;
     }
+    console.log(token);
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
         id: string;

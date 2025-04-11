@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 // Interface for User Document
 export interface IUser extends Document {
   email: string;
-  password: string;
+  password?: string;
   name: string;
   isPro: boolean;
   proSince?: Date;
@@ -21,9 +21,8 @@ const userSchema: Schema<IUser> = new Schema({
     unique: true,
   },
   password: {
-    type: String,
-    required: [true, "Password is required"],
-  },
+    type: String
+    },
   name: {
     type: String,
     required: [true, "Name is required"],
@@ -58,6 +57,7 @@ userSchema.pre<IUser>("save", async function (next) {
   if (!this.isModified("password")) return next();
 
   const salt = await bcrypt.genSalt(12);
+  if(this.password)
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });

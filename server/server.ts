@@ -4,7 +4,9 @@ import dotenv from "dotenv";
 import { errorMiddleware } from "./middlewares/errorMiddleware";
 import db from "./config/db";
 import AppError from "./utils/AppError";
-import authRoutes from "./routes/authRoutes"
+import authRoutes from "./routes/authRoutes";
+import snippetRoutes from "./routes/snippetRoutes";
+
 // Initialize dotenv
 dotenv.config();
 
@@ -21,7 +23,9 @@ db();
 
 // Routes
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/snippet", snippetRoutes);
 
+// default route
 app.get("/", (req: Request, res: Response) => {
   res.json("Working");
 });
