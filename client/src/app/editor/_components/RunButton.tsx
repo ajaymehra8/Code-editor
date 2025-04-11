@@ -16,9 +16,10 @@ if(executionResult){
   return (
     <motion.button
     onClick={handleRun}
-    disabled={isRunning}
+    disabled={isRunning||!user}
     whileHover={{ scale: 1.02 }}
     whileTap={{ scale: 0.98 }}
+    title={!user?"Please signup first":undefined}
     className={`
       group relative inline-flex items-center gap-2.5 px-5 py-2.5
       disabled:cursor-not-allowed

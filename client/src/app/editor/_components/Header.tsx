@@ -1,11 +1,12 @@
 "use client";
 import { useGlobalState } from "@/context/GlobalProvider";
-import { Blocks, Code2, Sparkles } from "lucide-react";
+import { Blocks, Code2, LogIn, Sparkles } from "lucide-react";
 import Link from "next/link";
 import ThemeSelector from "./ThemeSelector";
 import LanguageSelector from "./LanguageSelector";
 import RunButton from "./RunButton";
 import HeaderProfileBtn from "./HeaderProfileBtn";
+import { motion } from "framer-motion";
 
 const Header = () => {
   const { user } = useGlobalState();
@@ -44,7 +45,7 @@ const Header = () => {
           {/* Navigation */}
           <nav className="flex items-center space-x-1">
             <Link
-              href="/snippets"
+              href="/"
               className="relative group flex items-center gap-2 px-4 py-1.5 rounded-lg text-gray-300 bg-gray-800/50 
                 hover:bg-blue-500/10 border border-gray-800 hover:border-blue-500/50 transition-all duration-300 shadow-lg overflow-hidden"
             >
@@ -64,11 +65,11 @@ const Header = () => {
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3">
-            <ThemeSelector/>
+            <ThemeSelector />
             <LanguageSelector hasAccess={true} />
           </div>
 
-          {!user?.isPro && (
+          {user && !user?.isPro && (
             <Link
               href="/pricing"
               className="flex items-center gap-2 px-4 py-1.5 rounded-lg border border-amber-500/20 hover:border-amber-500/40 bg-gradient-to-r from-amber-500/10 
@@ -82,8 +83,29 @@ const Header = () => {
             </Link>
           )}
 
-           <RunButton />
+          <RunButton />
+          {!user && (
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className={`
+      group relative inline-flex items-center gap-2.5 px-5 py-2.5
+      disabled:cursor-not-allowed
+      focus:outline-none cursor-pointer
+    `}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl opacity-100 transition-opacity group-hover:opacity-90" />
+              <div className="relative flex items-center gap-2.5">
 
+              <div className="relative flex items-center justify-center w-4 h-4">
+                <LogIn className="w-4 h-4 text-white/90 transition-transform group-hover:scale-110 group-hover:text-white" />
+              </div>
+              <span className="text-sm font-medium text-white/90 group-hover:text-white">
+                Sign In
+              </span>{" "}
+              </div>
+            </motion.button>
+          )}
           <div className="pl-3 border-l border-gray-800">
             <HeaderProfileBtn />
           </div>

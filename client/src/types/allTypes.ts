@@ -61,21 +61,24 @@ export interface CodeEditorState {
   runCode: () => Promise<void>;
 }
 
-export interface Snippet {
-  _id: string;
-  createdAt: Date;
-  userId: string;
-  language: string;
-  code: string;
-  title: string;
-  userName: string;
-}
 export interface UserType {
+  _id:string;
   email: string;
   name: string;
   isPro: boolean;
   proSince?: Date;
   transactionId?: string;
   orderId?: string;
-  image?: string;
+  image: string;
 }
+
+export interface Snippet {
+  _id: string;
+  createdAt: Date;
+  user:UserType;
+  language: string;
+  code: string;
+  title: string;
+  
+}
+

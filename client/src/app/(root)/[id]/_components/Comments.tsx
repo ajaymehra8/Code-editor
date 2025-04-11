@@ -1,12 +1,11 @@
 "use client";
-import { useGlobalState } from "@/context/GlobalProvider";
 import { MessageSquare } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Comment from "./Comment";
 import CommentForm from "./CommentForm";
 
-function Comments({ snippetId }: { snippetId: string }) {
+function Comments({ snippetId }: { snippetId: string|undefined}) {
   const user={
     _id:"klsd",
   }
@@ -61,6 +60,7 @@ function Comments({ snippetId }: { snippetId: string }) {
       setDeletingCommentId(null);
     }
   };
+  if(!snippetId) return null;
   return (
     <div className="bg-[#121218] border border-[#ffffff0a] rounded-2xl overflow-hidden">
       <div className="px-6 sm:px-8 py-6 border-b border-[#ffffff0a]">
