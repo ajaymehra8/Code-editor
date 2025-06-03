@@ -73,7 +73,7 @@ export const sendOtp = catchAsync(
   async (req: MyRequest, res: Response, next: NextFunction) => {
     const { email } = req.query;
     if (!email || typeof email !== "string") {
-      return next(new AppError(400, "Please provide a valid email"));
+      return next(new AppError(400, "Please provide a email"));
     }
     const user = await User.findOne({ email });
     if (user) {

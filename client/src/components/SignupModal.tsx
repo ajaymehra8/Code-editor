@@ -3,20 +3,22 @@ import { Github, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { useGlobalState } from "@/context/GlobalProvider";
 import { useGoogleLogin } from "@react-oauth/google";
-import { googleLogin } from "../utils/api";
+import { getOtp, googleLogin } from "../utils/api";
 
 import toast from "react-hot-toast";
+import { AxiosError } from "axios";
+import { useState } from "react";
 const SignupModal = () => {
-  const { setOpenSignupModal, setUser,setToken } = useGlobalState();
+  const { setOpenSignupModal, setUser, setToken } = useGlobalState();
+  const [email, setEmail] = useState("");
   const responseGoogle = async (authResult) => {
     try {
       if (authResult?.code) {
         const result = await googleLogin(authResult?.code);
         if (result.data.success) {
-
           const user = JSON.stringify(result?.data?.user);
           localStorage.setItem("user", user);
-          localStorage.setItem("token",result.data.token)
+          localStorage.setItem("token", result.data.token);
           setUser(result?.data?.user);
           setToken(result.data.token);
           toast.success("Login successfully");
@@ -24,8 +26,7 @@ const SignupModal = () => {
         }
       }
     } catch (err) {
-      console.log(err);
-      alert(err.message);
+      if (err instanceof AxiosError) alert(err.message);
     }
   };
   const googleLoginHandle = useGoogleLogin({
@@ -33,6 +34,14 @@ const SignupModal = () => {
     onError: responseGoogle,
     flow: "auth-code",
   });
+  const sendOtp = async () => {
+    try {
+      await getOtp(email);
+    } catch (err) {
+      console.log(err);
+      if (err instanceof AxiosError) alert(err.response?.data.message);
+    }
+  };
   return (
     <motion.div
       initial={{ scale: 0, opacity: 0 }}
@@ -56,8 +65,10 @@ const SignupModal = () => {
         <button className="rounded-full border py-1 px-5 cursor-pointer flex gap-3">
           <Github /> Github
         </button>
-        <button className="rounded-full border py-1 px-5 cursor-pointer flex gap-3" onClick={googleLoginHandle}>
-       
+        <button
+          className="rounded-full border py-1 px-5 cursor-pointer flex gap-3"
+          onClick={googleLoginHandle}
+        >
           Google
         </button>
       </div>
@@ -69,10 +80,17 @@ const SignupModal = () => {
         <input
           type="text"
           id="email"
+          value={email}
           className="border border-black-300 rounded px-3 py-2 focus:outline-none focus:ring-0 focus:border"
+          onChange={(e) => {
+            setEmail(e.target.value);
+          }}
         />
       </div>
-      <button className="mt-8 rounded-md py-2 w-[90%] bg-gradient-to-t from-gray-900 to-gray-500 cursor-pointer text-lg text-white tracking-wide">
+      <button
+        className="mt-8 rounded-md py-2 w-[90%] bg-gradient-to-t from-gray-900 to-gray-500 cursor-pointer text-lg text-white tracking-wide"
+        onClick={sendOtp}
+      >
         Continue
       </button>
     </motion.div>

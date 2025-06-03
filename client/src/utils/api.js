@@ -21,7 +21,7 @@ API.interceptors.request.use(
 );
 
 // signup and login apis
-export const getOtp=(email)=>API.get(`/api/v1/auth/get-otp/?email=${email}`);
+export const getOtp=(email)=>API.get(`/api/v1/auth/send-otp/?email=${email}`);
 export const verifyOtp=(email,otp)=>API.post(`/api/v1/auth/verify-otp`,{email,otp});
 export const signup=(email)=>API.post(`/api/v1/auth/signup`,{email,password});
 export const login=(email,password)=>API.post(`/api/v1/auth/login`,{email,password});
