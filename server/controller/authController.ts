@@ -121,12 +121,12 @@ export const verifyOtp = catchAsync(
 // Signup controller
 export const signup = catchAsync(
   async (req: MyRequest, res: Response, next: NextFunction) => {
-    const { email, password } = req.body;
-    if (!email || !password) {
+    const { email, password,name } = req.body;
+    if (!email || !password || !name) {
       return next(new AppError(400, "Provide all required fields"));
     }
 
-    const user = await User.create({ email, password });
+    const user = await User.create({ email, password,name });
     if (!user) {
       return next(new AppError(500, "Problem in sign up."));
     }
