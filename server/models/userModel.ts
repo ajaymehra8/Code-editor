@@ -14,41 +14,46 @@ export interface IUser extends Document {
   comparePassword(password: string): Promise<boolean>;
 }
 
-const userSchema: Schema<IUser> = new Schema({
-  email: {
-    type: String,
-    required: [true, "Email is required"],
-    unique: true,
-  },
-  password: {
-    type: String
+const userSchema: Schema<IUser> = new Schema(
+  {
+    email: {
+      type: String,
+      required: [true, "Email is required"],
+      unique: true,
     },
-  name: {
-    type: String,
-    required: [true, "Name is required"],
+    password: {
+      type: String,
+    },
+    name: {
+      type: String,
+      required: [true, "Name is required"],
+    },
+    isPro: {
+      type: Boolean,
+      default: false,
+    },
+    proSince: {
+      type: Date,
+    },
+    transactionId: {
+      type: String,
+    },
+    orderId: {
+      type: String,
+    },
+    image: {
+      type: String,
+      default:
+        "https://static.vecteezy.com/system/resources/thumbnails/001/840/618/small/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg",
+    }
   },
-  isPro: {
-    type: Boolean,
-    default: false,
-  },
-  proSince: {
-    type: Date,
-  },
-  transactionId: {
-    type: String,
-  },
-  orderId: {
-    type: String,
-  },
-  image: {
-    type: String,
-    default:
-      "https://static.vecteezy.com/system/resources/thumbnails/001/840/618/small/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg",
-  },
-},{timestamps:true});
+  { timestamps: true }
+);
 
 // Method to compare passwords
-userSchema.methods.comparePassword = function (password: string): Promise<boolean> {
+userSchema.methods.comparePassword = function (
+  password: string
+): Promise<boolean> {
   return bcrypt.compare(password, this.password);
 };
 
@@ -57,8 +62,7 @@ userSchema.pre<IUser>("save", async function (next) {
   if (!this.isModified("password")) return next();
 
   const salt = await bcrypt.genSalt(12);
-  if(this.password)
-  this.password = await bcrypt.hash(this.password, salt);
+  if (this.password) this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 

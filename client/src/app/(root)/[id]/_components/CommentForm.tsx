@@ -74,7 +74,7 @@ setIsPreview(false);
           <button
             type="submit"
             disabled={isSubmitting || !comment.trim()}
-            className="flex items-center gap-2 px-4 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-[#2563eb] disabled:opacity-50 disabled:cursor-not-allowed transition-all ml-auto"
+            className="flex items-center gap-2 px-4 py-2 cursor-pointer bg-[#3b82f6] text-white rounded-lg hover:bg-[#2563eb] disabled:opacity-50 disabled:cursor-not-allowed transition-all ml-auto"
           >
             {isSubmitting ? (
               <>

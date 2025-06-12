@@ -6,6 +6,8 @@ export interface ISnippet extends Document {
   title:string,
   language:string,
   code:string,
+    starredBy?: mongoose.Types.ObjectId[];
+
 }
 
 const snippetSchema: Schema<ISnippet> = new Schema({
@@ -28,7 +30,10 @@ const snippetSchema: Schema<ISnippet> = new Schema({
     required:[true,"Must write code"],
 
  },
-
+starredBy:[{
+   type:mongoose.Schema.Types.ObjectId,
+   ref:'User'
+}]
 
 },{timestamps:true});
 

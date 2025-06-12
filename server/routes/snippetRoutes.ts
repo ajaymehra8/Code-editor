@@ -9,7 +9,12 @@ router
   .get(snippetController.getAllSnippet)
   .delete(isProtect,snippetController.deleteSnippet);
 
+
 router.use(isProtect);
+
+router
+   .route("/star-snippet")
+   .post(snippetController.addStar);
 router.post("/share-snippet", snippetController.createSnipeet);
 
 export default router;

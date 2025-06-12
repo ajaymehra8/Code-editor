@@ -19,6 +19,7 @@ interface SnippetCardProps {
     user: UserType;
     createdAt: Date;
     code: string;
+    starredBy: string[];
   };
 }
 const SnippetCard = ({ snippet }: SnippetCardProps) => {
@@ -85,7 +86,7 @@ const SnippetCard = ({ snippet }: SnippetCardProps) => {
                   </span>
                   <div className="flex items-center gap-2 text-xs text-gray-500">
                     <Clock className="size-3" />
-                    {new Date(snippet.createdAt).toLocaleDateString()}
+                    {new Date(snippet.createdAt).toLocaleDateString("en-GB")}
                   </div>
                 </div>
               </div>
@@ -93,7 +94,11 @@ const SnippetCard = ({ snippet }: SnippetCardProps) => {
                 className="absolute top-5 right-5 z-10 flex gap-4 items-center"
                 onClick={(e) => e.preventDefault()}
               >
-                <StarButton snippetId={snippet._id} />
+                <StarButton
+                  snippetId={snippet._id}
+                  isStarred={snippet.starredBy.includes(user?._id || "")}
+                  starCount={snippet.starredBy.length}
+                />
 
                 {/* come here after backend */}
                 {user?._id === snippet?.user?._id && (

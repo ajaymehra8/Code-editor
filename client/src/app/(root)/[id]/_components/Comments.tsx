@@ -41,6 +41,7 @@ function Comments({ snippetId }: { snippetId: string|undefined}) {
     setIsSubmitting(true);
     try {
       // call add comment api here
+      
     } catch (err) {
       console.log(err);
       toast.error("Problem in adding comment");
