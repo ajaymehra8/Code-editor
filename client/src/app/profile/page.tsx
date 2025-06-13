@@ -5,10 +5,13 @@ import NavigationHeader from "@/components/NavigationHeader";
 import ProfileHeader from "./_components/ProfileHeader";
 import ProfileHeaderSkeleton from "./_components/ProfileHeaderSkeleton";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronRight, Code, ListVideo, Loader2, Star } from "lucide-react";
 import CodeBlock from "./_components/CodeBlock";
 import Image from "next/image";
+import { AxiosError } from "axios";
+import toast from "react-hot-toast";
+import { getUserStats } from "@/utils/api";
 
 const TABS = [
   {
@@ -28,12 +31,31 @@ const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState<"executions" | "starred">(
     "executions"
   );
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [userStats, setUserStats] = useState({});
   const router = useRouter();
 
   //   const isLoadingExecutions = true;
   //   const executionStatus = true;
-  const userStats = {};
+  // last24Hours
+  // mostStarredLanguage
+  // favoriteLanguage
+  const getStats = async () => {
+    try {
+      setIsLoading(true);
+      const { data } = await getUserStats();
+      if (data.success) {
+        setUserStats(data.stats);
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) toast.error(err.response?.data.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    getStats();
+  }, []);
   //   const starredSnippets = [];
   //   const executions = false;
   const userData = user;
@@ -46,14 +68,13 @@ const ProfilePage = () => {
 
       <div className="max-w-7xl mx-auto px-4 py-12">
         {/* profile header */}
-        {user && (
+        {(user&&!isLoading)? (
           <ProfileHeader
             userStats={userStats}
             userData={userData}
             user={user}
           />
-        )}{" "}
-        {!user && <ProfileHeaderSkeleton />}
+        ):<ProfileHeaderSkeleton />}
         {/* // Main content */}
         <div
           className="bg-gradient-to-br from-[#12121a] to-[#1a1a2e] rounded-3xl shadow-2xl 

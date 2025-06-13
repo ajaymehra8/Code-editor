@@ -63,5 +63,8 @@ export const deleteSnippet = (snippetId) =>
 export const starSnippet = (snippetId) =>
   API.post(`/api/v1/snippet/star-snippet`,{snippetId});
 
+// user profile apis
+export const getUserStats = () =>
+  API.get(`/api/v1/user/user-stats`);
 
 export default API;
