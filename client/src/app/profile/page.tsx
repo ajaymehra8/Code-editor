@@ -6,12 +6,14 @@ import ProfileHeader from "./_components/ProfileHeader";
 import ProfileHeaderSkeleton from "./_components/ProfileHeaderSkeleton";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { ChevronRight, Code, ListVideo, Loader2, Star } from "lucide-react";
+import { Code, ListVideo, Loader2, Star, Trash2 } from "lucide-react";
 import CodeBlock from "./_components/CodeBlock";
 import Image from "next/image";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
-import { getUserStats } from "@/utils/api";
+import { deleteSnippet, getUserSnippets, getUserStats } from "@/utils/api";
+import { Snippet } from "@/types/allTypes";
+import SnippetHead from "./_components/SnippetHead";
 
 const TABS = [
   {
@@ -33,13 +35,10 @@ const ProfilePage = () => {
   );
   const [isLoading, setIsLoading] = useState(false);
   const [userStats, setUserStats] = useState({});
+  const [snippets, setSnippets] = useState<Snippet[] | null>(null);
+  const [snippetLoading, setSnippetLoading] = useState(false);
+ 
   const router = useRouter();
-
-  //   const isLoadingExecutions = true;
-  //   const executionStatus = true;
-  // last24Hours
-  // mostStarredLanguage
-  // favoriteLanguage
   const getStats = async () => {
     try {
       setIsLoading(true);
@@ -53,28 +52,44 @@ const ProfilePage = () => {
       setIsLoading(false);
     }
   };
+  const getSnippets = async () => {
+    try {
+      setSnippetLoading(true);
+      const { data } = await getUserSnippets();
+      if (data.success) {
+        console.log(data);
+        setSnippets(data.snippets);
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) toast.error(err.response?.data.message);
+    } finally {
+      setSnippetLoading(false);
+    }
+  };
   useEffect(() => {
     getStats();
+    getSnippets();
   }, []);
   //   const starredSnippets = [];
-  //   const executions = false;
   const userData = user;
   //   const handleLoadMore = () => {};
 
-  //   if (!user) router.push("/");
+  if (!user) router.push("/");
   return (
     <div className="min-h-screen bg-[#0a0a0f">
       <NavigationHeader />
 
       <div className="max-w-7xl mx-auto px-4 py-12">
         {/* profile header */}
-        {(user&&!isLoading)? (
+        {user && !isLoading ? (
           <ProfileHeader
             userStats={userStats}
             userData={userData}
             user={user}
           />
-        ):<ProfileHeaderSkeleton />}
+        ) : (
+          <ProfileHeaderSkeleton />
+        )}
         {/* // Main content */}
         <div
           className="bg-gradient-to-br from-[#12121a] to-[#1a1a2e] rounded-3xl shadow-2xl 
@@ -89,7 +104,7 @@ const ProfilePage = () => {
                   onClick={() =>
                     setActiveTab(tab.id as "executions" | "starred")
                   }
-                  className={`group flex items-center gap-2 px-6 py-2.5 rounded-lg transition-all duration-200 relative overflow-hidden ${
+                  className={`cursor-pointer group flex items-center gap-2 px-6 py-2.5 rounded-lg transition-all duration-200 relative overflow-hidden ${
                     activeTab === tab.id
                       ? "text-blue-400"
                       : "text-gray-400 hover:text-gray-300"
@@ -126,89 +141,61 @@ const ProfilePage = () => {
               className="p-6"
             >
               {/* ACTIVE TAB is executions: */}
-              {/*activeTab === "executions" && (
+              {activeTab === "executions" && (
                 <div className="space-y-6">
-                  {executions && executions?.map((execution) => (
-                    <div
-                      key={execution._id}
-                      className="group rounded-xl overflow-hidden transition-all duration-300 hover:border-blue-500/50 hover:shadow-md hover:shadow-blue-500/50"
-                    >
-                      <div className="flex items-center justify-between p-4 bg-black/30 border border-gray-800/50 rounded-t-xl">
-                        <div className="flex items-center gap-4">
-                          <div className="relative">
-                            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg blur opacity-20 group-hover:opacity-30 transition-opacity" />
-                            <Image
-                              src={"/" + execution.language + ".png"}
-                              alt=""
-                              className="rounded-lg relative z-10 object-cover"
-                              width={40}
-                              height={40}
-                            />
-                          </div>
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2">
-                              <span className="text-sm font-medium text-white">
-                                {execution.language.toUpperCase()}
-                              </span>
-                              <span className="text-xs text-gray-400">•</span>
-                              <span className="text-xs text-gray-400">
-                                {new Date(execution._creationTime).toLocaleString()}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <span
-                                className={`text-xs px-2 py-0.5 rounded-full ${
-                                  execution.error
-                                    ? "bg-red-500/10 text-red-400"
-                                    : "bg-green-500/10 text-green-400"
-                                }`}
-                              >
-                                {execution.error ? "Error" : "Success"}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                  {snippets &&
+                    snippets?.map((snippet) => (
+                      <div
+                        key={snippet._id}
+                        className="group rounded-xl overflow-hidden transition-all duration-300 hover:border-blue-500/50 hover:shadow-md hover:shadow-blue-500/50"
+                      >
+                        <SnippetHead snippet={snippet} setSnippets={setSnippets}/>
 
-                      <div className="p-4 bg-black/20 rounded-b-xl border border-t-0 border-gray-800/50">
-                        <CodeBlock code={execution.code} language={execution.language} />
+                        <div className="p-4 bg-black/20 rounded-b-xl border border-t-0 border-gray-800/50">
+                          <CodeBlock
+                            code={snippet.code}
+                            language={snippet.language}
+                          />
 
-                        {(execution.output || execution.error) && (
+                          {/* {(snippet.output || snippet.error) && (
                           <div className="mt-4 p-4 rounded-lg bg-black/40">
                             <h4 className="text-sm font-medium text-gray-400 mb-2">Output</h4>
                             <pre
                               className={`text-sm ${
-                                execution.error ? "text-red-400" : "text-green-400"
+                                snippet.error ? "text-red-400" : "text-green-400"
                               }`}
                             >
-                              {execution.error || execution.output}
+                              {snippet.error || snippet.output}
                             </pre>
                           </div>
-                        )}
+                        )} */}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
 
-                  {isLoadingExecutions ? (
+                  {snippetLoading ? (
                     <div className="text-center py-12">
                       <Loader2 className="w-12 h-12 text-gray-600 mx-auto mb-4 animate-spin" />
                       <h3 className="text-lg font-medium text-gray-400 mb-2">
-                        Loading code executions...
+                        Loading code snippets...
                       </h3>
                     </div>
                   ) : (
-                    executions.length === 0 && (
+                    snippets &&
+                    snippets.length === 0 && (
                       <div className="text-center py-12">
                         <Code className="w-12 h-12 text-gray-600 mx-auto mb-4" />
                         <h3 className="text-lg font-medium text-gray-400 mb-2">
-                          No code executions yet
+                          No code snippets yet
                         </h3>
-                        <p className="text-gray-500">Start coding to see your execution history!</p>
+                        <p className="text-gray-500">
+                          Start coding to see your snippet history!
+                        </p>
                       </div>
                     )
                   )}
 
-                  {executionStatus === "CanLoadMore" && (
+                  {/* {snippetStatus === "CanLoadMore" && (
                     <div className="flex justify-center mt-8">
                       <button
                         onClick={handleLoadMore}
@@ -219,9 +206,9 @@ const ProfilePage = () => {
                         <ChevronRight className="w-4 h-4" />
                       </button>
                     </div>
-                  )}
+                  )} */}
                 </div>
-              )*/}
+              )}
 
               {/* ACTIVE TAB IS STARS: */}
               {/*activeTab === "starred" && (

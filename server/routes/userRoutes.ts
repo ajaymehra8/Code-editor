@@ -7,5 +7,5 @@ const router = express.Router();
 
 router.use(authController.isProtect);
 router.get('/user-stats',userController.getUserStats);
-
+router.get('/user-snippets',userController.getUserSnippets);
 export default router;
