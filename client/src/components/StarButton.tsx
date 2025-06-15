@@ -5,7 +5,7 @@ import { AxiosError } from "axios";
 import { Star } from "lucide-react";
 import toast from "react-hot-toast";
 
-const StarButton = ({ snippetId,isStarred,starCount }: { snippetId: string,isStarred:boolean,starCount:number }) => {
+const StarButton = ({ snippetId,isStarred,starCount }: { snippetId: string,isStarred?:boolean,starCount?:number }) => {
   const { setSnippets } = useGlobalState();
   // star the snippet
   const handleStar = async () => {

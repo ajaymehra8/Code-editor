@@ -6,14 +6,16 @@ import ProfileHeader from "./_components/ProfileHeader";
 import ProfileHeaderSkeleton from "./_components/ProfileHeaderSkeleton";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Code, ListVideo, Loader2, Star, Trash2 } from "lucide-react";
+import { ChevronRight, Clock, Code, ListVideo, Loader2, Star, Trash2 } from "lucide-react";
 import CodeBlock from "./_components/CodeBlock";
 import Image from "next/image";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
-import { deleteSnippet, getUserSnippets, getUserStats } from "@/utils/api";
+import {  getUserSnippets, getUserStarredSnippets, getUserStats } from "@/utils/api";
 import { Snippet } from "@/types/allTypes";
 import SnippetHead from "./_components/SnippetHead";
+import StarButton from "@/components/StarButton";
+import Link from "next/link";
 
 const TABS = [
   {
@@ -36,6 +38,7 @@ const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [userStats, setUserStats] = useState({});
   const [snippets, setSnippets] = useState<Snippet[] | null>(null);
+  const [starredSnippets,setStarredSnippets]=useState<Snippet[] | null>(null);
   const [snippetLoading, setSnippetLoading] = useState(false);
  
   const router = useRouter();
@@ -66,11 +69,24 @@ const ProfilePage = () => {
       setSnippetLoading(false);
     }
   };
+  const getStarredSnippets=async () => {
+    try {
+      setSnippetLoading(true);
+      const { data } = await getUserStarredSnippets();
+      if (data.success) {
+        setStarredSnippets(data.snippets);
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) toast.error(err.response?.data.message);
+    } finally {
+      setSnippetLoading(false);
+    }
+  };
   useEffect(() => {
     getStats();
     getSnippets();
+    getStarredSnippets();
   }, []);
-  //   const starredSnippets = [];
   const userData = user;
   //   const handleLoadMore = () => {};
 
@@ -211,11 +227,11 @@ const ProfilePage = () => {
               )}
 
               {/* ACTIVE TAB IS STARS: */}
-              {/*activeTab === "starred" && (
+              {activeTab === "starred" && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {starredSnippets?.map((snippet) => (
                     <div key={snippet._id} className="group relative">
-                      <Link href={`/snippets/${snippet._id}`}>
+                      <Link href={`/${snippet._id}`}>
                         <div
                           className="bg-black/20 rounded-xl border border-gray-800/50 hover:border-gray-700/50 
                           transition-all duration-300 overflow-hidden h-full group-hover:transform
@@ -242,7 +258,7 @@ const ProfilePage = () => {
                                 className="absolute top-6 right-6 z-10"
                                 onClick={(e) => e.preventDefault()}
                               >
-                                <StarButton snippetId={snippet._id} />
+                                <StarButton snippetId={snippet._id} isStarred={true}/>
                               </div>
                             </div>
                             <h2 className="text-xl font-semibold text-white mb-3 line-clamp-1 group-hover:text-blue-400 transition-colors">
@@ -251,7 +267,7 @@ const ProfilePage = () => {
                             <div className="flex items-center justify-between text-sm text-gray-400">
                               <div className="flex items-center gap-2">
                                 <Clock className="w-4 h-4" />
-                                <span>{new Date(snippet._creationTime).toLocaleDateString()}</span>
+                                <span>{new Date(snippet.createdAt).toLocaleDateString()}</span>
                               </div>
                               <ChevronRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
                             </div>
@@ -280,8 +296,9 @@ const ProfilePage = () => {
                     </div>
                   )}
                 </div>
-              )*/}
+              )}
             </motion.div>
+
           </AnimatePresence>
         </div>
       </div>

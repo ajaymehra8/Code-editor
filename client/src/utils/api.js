@@ -67,4 +67,6 @@ export const starSnippet = (snippetId) =>
 export const getUserStats = () =>
   API.get(`/api/v1/user/user-stats`);
 export const getUserSnippets=()=>API.get(`/api/v1/user/user-snippets`);
+export const getUserStarredSnippets=()=>API.get(`/api/v1/user/starred-snippets`);
+
 export default API;

@@ -5,6 +5,7 @@ import catchAsync from "../utils/catchAsync";
 import AppError from "../utils/AppError";
 import mongoose from "mongoose";
 
+
 export const getUserStats = catchAsync(
   async (req: MyRequest, res: Response, next: NextFunction) => {
     const userId = new mongoose.Types.ObjectId(req.user._id);
@@ -97,3 +98,19 @@ export const getUserSnippets = catchAsync(
     });
   }
 );
+
+export const getUserStarredSnippets=catchAsync(async(req:MyRequest,res:Response,next:NextFunction)=>{
+const userId=new mongoose.Types.ObjectId(req.user._id);
+const snippets=await Snippet.find({
+  starredBy:userId,
+});
+if(!snippets){
+  next(new AppError(404,"No snippets starred by user"));
+  return;
+}
+res.status(200).json({
+  success:true,
+  snippets
+});
+});
+
