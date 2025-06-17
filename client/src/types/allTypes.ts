@@ -51,7 +51,9 @@ export interface CodeEditorState {
   fontSize: number;
   editor: monaco.editor.IStandaloneCodeEditor | null;
   executionResult: ExecutionResult | null;
-  setExecutionResult: React.Dispatch<React.SetStateAction<ExecutionResult | null>>;
+  setExecutionResult: React.Dispatch<
+    React.SetStateAction<ExecutionResult | null>
+  >;
 
   setEditor: (editor: monaco.editor.IStandaloneCodeEditor) => void;
   getCode: () => string;
@@ -62,7 +64,7 @@ export interface CodeEditorState {
 }
 
 export interface UserType {
-  _id:string;
+  _id: string;
   email: string;
   name: string;
   isPro: boolean;
@@ -75,10 +77,29 @@ export interface UserType {
 export interface Snippet {
   _id: string;
   createdAt: Date;
-  user:UserType;
+  user: UserType;
   language: string;
   code: string;
   title: string;
-  
+  starredBy?: string[];
 }
-
+export interface UserStatsType {
+  totalSnippetsByUser: { count: number }[];
+  snippetsLast24h: { count: number }[];
+  snippetsStarredByUser: { count: number }[];
+  mostStarredLanguage: { _id: string; starCount: number }[];
+  languageStats: {
+    languageCount: number;
+    mostUsedLanguage: {
+      language: string;
+      count: number;
+    };
+  }[];
+}
+export interface CommentType {
+  _id: string;
+  createdAt: Date;
+  user: UserType;
+  snippet: string;
+  content: string;
+}

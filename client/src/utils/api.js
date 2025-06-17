@@ -46,7 +46,7 @@ export const getOtp = (email) =>
 export const verifyOtp = (email, otp) =>
   API.post(`/api/v1/auth/verify-otp`, { email, otp });
 export const signup = (email, password, name) =>
-  API.post(`/api/v1/auth/signup`, { email, password, name});
+  API.post(`/api/v1/auth/signup`, { email, password, name });
 export const login = (email, password) =>
   API.post(`/api/v1/auth/login`, { email, password });
 export const googleLogin = (code) =>
@@ -61,12 +61,20 @@ export const getSnippet = (snippetId) =>
 export const deleteSnippet = (snippetId) =>
   API.delete(`/api/v1/snippet?snippetId=${snippetId}`);
 export const starSnippet = (snippetId) =>
-  API.post(`/api/v1/snippet/star-snippet`,{snippetId});
+  API.post(`/api/v1/snippet/star-snippet`, { snippetId });
 
 // user profile apis
-export const getUserStats = () =>
-  API.get(`/api/v1/user/user-stats`);
-export const getUserSnippets=()=>API.get(`/api/v1/user/user-snippets`);
-export const getUserStarredSnippets=()=>API.get(`/api/v1/user/starred-snippets`);
+export const getUserStats = () => API.get(`/api/v1/user/user-stats`);
+export const getUserSnippets = () => API.get(`/api/v1/user/user-snippets`);
+export const getUserStarredSnippets = () =>
+  API.get(`/api/v1/user/starred-snippets`);
+
+// snippet comment apis
+
+export const getSnippetComments = (snippetId) =>
+  API.get(`/api/v1/comment?snippetId=${snippetId}`);
+export const doComment=(snippetId,content)=>
+  API.post(`/api/v1/comment`,{snippetId,content});
+
 
 export default API;

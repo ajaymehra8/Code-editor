@@ -9,74 +9,63 @@ import {
   Zap,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { UserStatsType, UserType } from "@/types/allTypes";
+import Image from "next/image";
 
 interface ProfileHeaderProps {
-  userStats: {
-    totalSnippetsByUser: { count: number }[];
-    snippetsLast24h: { count: number }[];
-    snippetsStarredByUser: { count: number }[];
-    mostStarredLanguage: { _id: string; starCount: number }[];
-    languageStats: {
-      languageCount: number;
-      mostUsedLanguage: {
-        language: string;
-        count: number;
-      };
-    }[];
-  };
-  userData: any;
-  user: any;
+  userStats: UserStatsType;
+  userData: UserType | null;
+  user: UserType | null;
 }
 export default function ProfileHeader({
   userStats,
   userData,
   user,
 }: ProfileHeaderProps) {
-  console.log(userStats,userStats?.totalSnippetsByUser?.[0]);
-  if(!userStats) return null;
+  console.log(userStats, userStats?.totalSnippetsByUser?.[0]);
+  if (!userStats) return null;
   const STATS = [
-  {
-    label: "Code Executions",
-    value: userStats?.totalSnippetsByUser?.[0]?.count ?? 0,
-    icon: Activity,
-    color: "from-blue-500 to-cyan-500",
-    gradient: "group-hover:via-blue-400",
-    description: "Total code runs",
-    metric: {
-      label: "Last 24h",
-      value: userStats?.snippetsLast24h?.[0]?.count ?? 0,
-      icon: Timer,
+    {
+      label: "Code Executions",
+      value: userStats?.totalSnippetsByUser?.[0]?.count ?? 0,
+      icon: Activity,
+      color: "from-blue-500 to-cyan-500",
+      gradient: "group-hover:via-blue-400",
+      description: "Total code runs",
+      metric: {
+        label: "Last 24h",
+        value: userStats?.snippetsLast24h?.[0]?.count ?? 0,
+        icon: Timer,
+      },
     },
-  },
-  {
-    label: "Starred Snippets",
-    value: userStats?.snippetsStarredByUser?.[0]?.count ?? 0,
-    icon: Star,
-    color: "from-yellow-500 to-orange-500",
-    gradient: "group-hover:via-yellow-400",
-    description: "Saved for later",
-    metric: {
-      label: "Most starred",
-      value: userStats?.mostStarredLanguage?.[0]?._id ?? "N/A",
-      icon: Trophy,
+    {
+      label: "Starred Snippets",
+      value: userStats?.snippetsStarredByUser?.[0]?.count ?? 0,
+      icon: Star,
+      color: "from-yellow-500 to-orange-500",
+      gradient: "group-hover:via-yellow-400",
+      description: "Saved for later",
+      metric: {
+        label: "Most starred",
+        value: userStats?.mostStarredLanguage?.[0]?._id ?? "N/A",
+        icon: Trophy,
+      },
     },
-  },
-  {
-    label: "Languages Used",
-    value: userStats?.languageStats?.[0]?.languageCount ?? 0,
-    icon: Code2,
-    color: "from-purple-500 to-pink-500",
-    gradient: "group-hover:via-purple-400",
-    description: "Different languages",
-    metric: {
-      label: "Most used",
-      value:
-        userStats?.languageStats?.[0]?.mostUsedLanguage?.language ?? "N/A",
-      icon: TrendingUp,
+    {
+      label: "Languages Used",
+      value: userStats?.languageStats?.[0]?.languageCount ?? 0,
+      icon: Code2,
+      color: "from-purple-500 to-pink-500",
+      gradient: "group-hover:via-purple-400",
+      description: "Different languages",
+      metric: {
+        label: "Most used",
+        value:
+          userStats?.languageStats?.[0]?.mostUsedLanguage?.language ?? "N/A",
+        icon: TrendingUp,
+      },
     },
-  },
-];
-
+  ];
 
   return (
     <div
@@ -90,8 +79,8 @@ export default function ProfileHeader({
             className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full 
           blur-xl opacity-50 group-hover:opacity-75 transition-opacity"
           />
-          <img
-            src={user?.image}
+          <Image
+            src={user?.image||""}
             alt="Profile"
             className="w-24 h-24 rounded-full border-4 border-gray-800/50 relative z-10 group-hover:scale-105 transition-transform"
           />

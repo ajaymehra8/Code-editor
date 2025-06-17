@@ -6,13 +6,24 @@ import ProfileHeader from "./_components/ProfileHeader";
 import ProfileHeaderSkeleton from "./_components/ProfileHeaderSkeleton";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { ChevronRight, Clock, Code, ListVideo, Loader2, Star, Trash2 } from "lucide-react";
+import {
+  ChevronRight,
+  Clock,
+  Code,
+  ListVideo,
+  Loader2,
+  Star,
+} from "lucide-react";
 import CodeBlock from "./_components/CodeBlock";
 import Image from "next/image";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
-import {  getUserSnippets, getUserStarredSnippets, getUserStats } from "@/utils/api";
-import { Snippet } from "@/types/allTypes";
+import {
+  getUserSnippets,
+  getUserStarredSnippets,
+  getUserStats,
+} from "@/utils/api";
+import { Snippet, UserStatsType } from "@/types/allTypes";
 import SnippetHead from "./_components/SnippetHead";
 import StarButton from "@/components/StarButton";
 import Link from "next/link";
@@ -36,11 +47,19 @@ const ProfilePage = () => {
     "executions"
   );
   const [isLoading, setIsLoading] = useState(false);
-  const [userStats, setUserStats] = useState({});
+  const [userStats, setUserStats] = useState<UserStatsType>({
+    totalSnippetsByUser: [],
+    snippetsLast24h: [],
+    snippetsStarredByUser: [],
+    mostStarredLanguage: [],
+    languageStats: [],
+  });
   const [snippets, setSnippets] = useState<Snippet[] | null>(null);
-  const [starredSnippets,setStarredSnippets]=useState<Snippet[] | null>(null);
+  const [starredSnippets, setStarredSnippets] = useState<Snippet[] | null>(
+    null
+  );
   const [snippetLoading, setSnippetLoading] = useState(false);
- 
+
   const router = useRouter();
   const getStats = async () => {
     try {
@@ -69,7 +88,7 @@ const ProfilePage = () => {
       setSnippetLoading(false);
     }
   };
-  const getStarredSnippets=async () => {
+  const getStarredSnippets = async () => {
     try {
       setSnippetLoading(true);
       const { data } = await getUserStarredSnippets();
@@ -165,7 +184,10 @@ const ProfilePage = () => {
                         key={snippet._id}
                         className="group rounded-xl overflow-hidden transition-all duration-300 hover:border-blue-500/50 hover:shadow-md hover:shadow-blue-500/50"
                       >
-                        <SnippetHead snippet={snippet} setSnippets={setSnippets}/>
+                        <SnippetHead
+                          snippet={snippet}
+                          setSnippets={setSnippets}
+                        />
 
                         <div className="p-4 bg-black/20 rounded-b-xl border border-t-0 border-gray-800/50">
                           <CodeBlock
@@ -258,7 +280,11 @@ const ProfilePage = () => {
                                 className="absolute top-6 right-6 z-10"
                                 onClick={(e) => e.preventDefault()}
                               >
-                                <StarButton snippetId={snippet._id} isStarred={true}/>
+                                <StarButton
+                                  snippetId={snippet._id}
+                                  isStarred={true}
+                                  setStarredSnippets={setStarredSnippets}
+                                />
                               </div>
                             </div>
                             <h2 className="text-xl font-semibold text-white mb-3 line-clamp-1 group-hover:text-blue-400 transition-colors">
@@ -267,7 +293,11 @@ const ProfilePage = () => {
                             <div className="flex items-center justify-between text-sm text-gray-400">
                               <div className="flex items-center gap-2">
                                 <Clock className="w-4 h-4" />
-                                <span>{new Date(snippet.createdAt).toLocaleDateString()}</span>
+                                <span>
+                                  {new Date(
+                                    snippet.createdAt
+                                  ).toLocaleDateString()}
+                                </span>
                               </div>
                               <ChevronRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
                             </div>
@@ -298,7 +328,6 @@ const ProfilePage = () => {
                 </div>
               )}
             </motion.div>
-
           </AnimatePresence>
         </div>
       </div>

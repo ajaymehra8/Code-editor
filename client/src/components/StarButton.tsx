@@ -1,11 +1,22 @@
 "use client";
 import { useGlobalState } from "@/context/GlobalProvider";
+import { Snippet } from "@/types/allTypes";
 import { starSnippet } from "@/utils/api";
 import { AxiosError } from "axios";
 import { Star } from "lucide-react";
 import toast from "react-hot-toast";
 
-const StarButton = ({ snippetId,isStarred,starCount }: { snippetId: string,isStarred?:boolean,starCount?:number }) => {
+const StarButton = ({
+  snippetId,
+  isStarred,
+  starCount,
+  setStarredSnippets,
+}: {
+  snippetId: string;
+  isStarred?: boolean;
+  starCount?: number;
+  setStarredSnippets?: React.Dispatch<React.SetStateAction<Snippet[] | null>>;
+}) => {
   const { setSnippets } = useGlobalState();
   // star the snippet
   const handleStar = async () => {
@@ -13,14 +24,23 @@ const StarButton = ({ snippetId,isStarred,starCount }: { snippetId: string,isSta
       const { data } = await starSnippet(snippetId);
       if (data.success) {
         toast.success(data.message);
-        setSnippets((prevSninppets)=>{
-          return prevSninppets.map((snippet)=>{
-            if(snippet._id===data.snippet._id){
+        setSnippets((prevSninppets) => {
+          return prevSninppets.map((snippet) => {
+            if (snippet._id === data.snippet._id) {
               return data.snippet;
             }
             return snippet;
-          })
-        })
+          });
+        });
+        if (setStarredSnippets) {
+          setStarredSnippets((prevSnippet) => {
+            if (prevSnippet)
+              return prevSnippet?.filter(
+                (snippet) => snippet._id != data.snippet._id
+              );
+            return null;
+          });
+        }
       }
     } catch (err) {
       if (err instanceof AxiosError) toast.error(err.response?.data.message);

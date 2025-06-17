@@ -1,15 +1,9 @@
 import { Trash2Icon, UserIcon } from "lucide-react";
 import CommentContent from "./CommentContent";
+import { CommentType } from "@/types/allTypes";
 
 interface CommentProps{
-comment: {
-    _id:string;
-    createdAt: Date;
-    userId: string;
-    userName: string;
-    snippetId:string;
-    content: string;
-  };
+comment:CommentType;
 onDelete:(commentId:string)=>void;
 isDeleting:boolean;
 currentUserId?:string;
@@ -24,14 +18,14 @@ function Comment({comment,onDelete,isDeleting,currentUserId}:CommentProps) {
               <UserIcon className="w-4 h-4 text-[#808086]" />
             </div>
             <div className="min-w-0">
-              <span className="block text-[#e1e1e3] font-medium truncate">{comment.userName}</span>
+              <span className="block text-[#e1e1e3] font-medium truncate">{comment.user?.name}</span>
               <span className="block text-sm text-[#808086]">
                 {new Date(comment.createdAt).toLocaleDateString()}
               </span>
             </div>
           </div>
 
-          {comment.userId === currentUserId && (
+          {comment.user?._id === currentUserId && (
             <button
               onClick={() => onDelete(comment._id)}
               disabled={isDeleting}

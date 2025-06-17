@@ -7,6 +7,8 @@ import AppError from "./utils/AppError";
 import authRoutes from "./routes/authRoutes";
 import snippetRoutes from "./routes/snippetRoutes";
 import userRoutes from "./routes/userRoutes";
+import commentRoutes from "./routes/commentRoutes";
+
 // Initialize dotenv
 dotenv.config();
 
@@ -24,7 +26,9 @@ db();
 // Routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/snippet", snippetRoutes);
-app.use("/api/v1/user",userRoutes);
+app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/comment", commentRoutes);
+
 // default route
 app.get("/", (req: Request, res: Response) => {
   res.json("Working");
