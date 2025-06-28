@@ -11,13 +11,13 @@ import CopyButton from "./_components/CopyButton";
 import Comments from "./_components/Comments";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
-import { getSnippet } from "@/utils/api";
-import { Snippet } from "@/types/allTypes";
+import { getSnippet, getSnippetComments } from "@/utils/api";
+import { CommentType, Snippet } from "@/types/allTypes";
 import Image from "next/image";
 const Page = () => {
   const [loading, setLoading] = useState(false);
   const [snippet, setSnippet] = useState<Snippet | null>(null);
-  const comments = [];
+  const [comments, setComments] = useState<CommentType[] | null>(null);
   const params = useParams();
   const snippetId = Array.isArray(params.id) ? params.id[0] : params.id; // safely extract string  const comments = [];
 
@@ -27,6 +27,7 @@ const Page = () => {
     try {
       const { data } = await getSnippet(snippetId);
       if (data.success) {
+        console.log(data.snippet);
         setSnippet(data.snippet);
       }
     } catch (err) {
@@ -35,8 +36,19 @@ const Page = () => {
       setLoading(false);
     }
   };
-  const getAllComments = () => {
+  const getAllComments = async() => {
     // function for getting all comments of that snippet
+     // function for getting all comments of snippet
+        try {
+          const { data } = await getSnippetComments(snippetId);
+          if (data.success) {
+            setComments(data.comments);
+          }
+        } catch (err) {
+          if (err instanceof AxiosError) {
+            toast.error(err.response?.data.message);
+          }
+        }
   };
   useEffect(() => {
     getSnippetDetails();
@@ -125,7 +137,7 @@ const Page = () => {
             </div>
           </div>
 
-          <Comments snippetId={snippetId} />
+          <Comments snippetId={snippetId} comments={comments} setComments={setComments}/>
         </main>
       )}
     </div>

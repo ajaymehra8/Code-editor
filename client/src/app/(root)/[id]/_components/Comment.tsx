@@ -1,14 +1,43 @@
+"use client";
 import { Trash2Icon, UserIcon } from "lucide-react";
 import CommentContent from "./CommentContent";
 import { CommentType } from "@/types/allTypes";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { deleteSnippetComment } from "@/utils/api";
+import { AxiosError } from "axios";
 
-interface CommentProps{
-comment:CommentType;
-onDelete:(commentId:string)=>void;
-isDeleting:boolean;
-currentUserId?:string;
-};
-function Comment({comment,onDelete,isDeleting,currentUserId}:CommentProps) {
+interface CommentProps {
+  comment: CommentType;
+  currentUserId?: string;
+  setComments: React.Dispatch<React.SetStateAction<CommentType[] | null>>;
+}
+function Comment({ comment, currentUserId, setComments }: CommentProps) {
+  const [loading, setLoading] = useState<boolean>(false);
+  const deleteComment = async () => {
+    setLoading(true);
+    try {
+      // call api to delete element
+      console.log(comment._id);
+      const { data } = await deleteSnippetComment(comment._id);
+      if (data.success) {
+        setComments((prevComments) => {
+          if (prevComments) {
+            return prevComments.filter(
+              (currComment) => comment._id != currComment._id
+            );
+          }
+          return null;
+        });
+        toast.success(data.message);
+      }
+    } catch (err) {
+      console.log(err);
+      if (err instanceof AxiosError) toast.error(err.response?.data.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="group">
       <div className="bg-[#0a0a0f] rounded-xl p-6 border border-[#ffffff0a] hover:border-[#ffffff14] transition-all">
@@ -18,7 +47,9 @@ function Comment({comment,onDelete,isDeleting,currentUserId}:CommentProps) {
               <UserIcon className="w-4 h-4 text-[#808086]" />
             </div>
             <div className="min-w-0">
-              <span className="block text-[#e1e1e3] font-medium truncate">{comment.user?.name}</span>
+              <span className="block text-[#e1e1e3] font-medium truncate">
+                {comment.user?.name}
+              </span>
               <span className="block text-sm text-[#808086]">
                 {new Date(comment.createdAt).toLocaleDateString()}
               </span>
@@ -27,8 +58,8 @@ function Comment({comment,onDelete,isDeleting,currentUserId}:CommentProps) {
 
           {comment.user?._id === currentUserId && (
             <button
-              onClick={() => onDelete(comment._id)}
-              disabled={isDeleting}
+              onClick={deleteComment}
+              disabled={loading}
               className="opacity-0 group-hover:opacity-100 p-2 hover:bg-red-500/10 rounded-lg transition-all"
               title="Delete comment"
             >
@@ -40,7 +71,7 @@ function Comment({comment,onDelete,isDeleting,currentUserId}:CommentProps) {
         <CommentContent content={comment.content} />
       </div>
     </div>
-  )
+  );
 }
 
-export default Comment
+export default Comment;

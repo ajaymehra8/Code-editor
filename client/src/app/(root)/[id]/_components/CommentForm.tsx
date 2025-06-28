@@ -3,29 +3,30 @@ import { CodeIcon, SendIcon } from "lucide-react";
 import { useState } from "react";
 import CommentContent from "./CommentContent";
 interface CommentFormProps {
-  onSubmit: (comment:string) => Promise<void>;
+  onSubmit: (comment: string) => Promise<void>;
   isSubmitting: boolean;
 }
 function CommentForm({ onSubmit, isSubmitting }: CommentFormProps) {
   const [comment, setComment] = useState("");
   const [isPreview, setIsPreview] = useState(false);
-  const handleKeyDown = (e:React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Tab") {
       e.preventDefault();
       const start = e.currentTarget.selectionStart;
       const end = e.currentTarget.selectionEnd;
-      const newComment = comment.substring(0, start) + "  " + comment.substring(end);
+      const newComment =
+        comment.substring(0, start) + "  " + comment.substring(end);
       setComment(newComment);
       e.currentTarget.selectionStart = e.currentTarget.selectionEnd = start + 2;
     }
   };
-  const handleSubmit = async(e:React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if(!comment.trim()) return;
+    if (!comment.trim()) return;
 
     await onSubmit(comment);
-setComment("");
-setIsPreview(false);
+    setComment("");
+    setIsPreview(false);
   };
   return (
     <form onSubmit={handleSubmit} className="mb-8">
@@ -49,7 +50,7 @@ setIsPreview(false);
 
         {isPreview ? (
           <div className="min-h-[120px] p-4 text-[#e1e1e3] ">
-            <CommentContent content={comment}/>
+            <CommentContent content={comment} />
           </div>
         ) : (
           <textarea
@@ -92,7 +93,6 @@ setIsPreview(false);
             )}
           </button>
         </div>
-
       </div>
     </form>
   );

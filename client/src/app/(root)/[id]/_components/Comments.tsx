@@ -1,38 +1,18 @@
 "use client";
 import { MessageSquare } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import Comment from "./Comment";
 import CommentForm from "./CommentForm";
 import { CommentType } from "@/types/allTypes";
 import { AxiosError } from "axios";
-import { doComment, getSnippetComments } from "@/utils/api";
+import { doComment } from "@/utils/api";
 import { useGlobalState } from "@/context/GlobalProvider";
 
-function Comments({ snippetId }: { snippetId: string | undefined }) {
+function Comments({ snippetId,comments,setComments }: { snippetId: string | undefined,comments:CommentType[] | null,setComments:React.Dispatch<React.SetStateAction<CommentType[] | null>> }) {
   const { user } = useGlobalState();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [comments, setComments] = useState<CommentType[] | null>(null);
-  const [deletingCommentId, setDeletingCommentId] = useState<string | null>(
-    null
-  );
 
-  const getComments = async () => {
-    // function for getting all comments of snippet
-    try {
-      const { data } = await getSnippetComments(snippetId);
-      if (data.success) {
-        setComments(data.comments);
-      }
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        toast.error(err.response?.data.message);
-      }
-    }
-  };
-  useEffect(() => {
-    getComments();
-  }, []);
   const handleSubmitComment = async (content: string) => {
     // function for adding a comment
     console.log(content);
@@ -53,19 +33,7 @@ function Comments({ snippetId }: { snippetId: string | undefined }) {
       setIsSubmitting(false);
     }
   };
-  const deleteComment = async (commentId: string | null) => {
-    // function for deleting comment
-    if (!commentId) return;
-    setDeletingCommentId(commentId);
-    try {
-      // call api to delete element
-    } catch (err) {
-      console.log(err);
-      toast.error("Problem in deleting comment");
-    } finally {
-      setDeletingCommentId(null);
-    }
-  };
+  
   if (!snippetId) return null;
   return (
     <div className="bg-[#121218] border border-[#ffffff0a] rounded-2xl overflow-hidden">
@@ -95,8 +63,7 @@ function Comments({ snippetId }: { snippetId: string | undefined }) {
             <Comment
               key={comment?._id}
               comment={comment}
-              onDelete={deleteComment}
-              isDeleting={deletingCommentId === comment?._id}
+              setComments={setComments}
               currentUserId={user?._id || undefined}
             />
           ))}

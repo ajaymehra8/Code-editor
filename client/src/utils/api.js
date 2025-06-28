@@ -75,6 +75,8 @@ export const getSnippetComments = (snippetId) =>
   API.get(`/api/v1/comment?snippetId=${snippetId}`);
 export const doComment=(snippetId,content)=>
   API.post(`/api/v1/comment`,{snippetId,content});
+export const deleteSnippetComment = (commentId) =>
+  API.delete(`/api/v1/comment/${commentId}`);
 
 
 export default API;

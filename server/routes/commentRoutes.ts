@@ -5,6 +5,8 @@ import * as authController from "../controller/authController";
 const router = express.Router();
 
 router.use(authController.isProtect);
+router.delete("/:commentId",commentController.deleteComment);
+
 router
   .get("/", commentController.getAllComments)
   .post("/", commentController.doComment);
