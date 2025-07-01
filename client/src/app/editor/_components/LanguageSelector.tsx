@@ -21,7 +21,7 @@ const LanguageSelector = ({ hasAccess }: propType) => {
   };
   return (
     <div className="relative" ref={dropdownRef}>
-      <motion.button
+      <motion.div
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         onClick={()=>{setIsOpen(!isOpen)}}
@@ -146,7 +146,7 @@ const LanguageSelector = ({ hasAccess }: propType) => {
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.button>
+    </motion.div>
 
     </div>
   );
