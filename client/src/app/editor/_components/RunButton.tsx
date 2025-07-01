@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { Loader2, PlayIcon } from 'lucide-react'
 
 const RunButton = () => {
-  const {user,runCode,language,isRunning,executionResult}=useGlobalState();
+  const {user,runCode,isRunning,executionResult}=useGlobalState();
   const handleRun=async()=>{
 await runCode();
 if(executionResult){

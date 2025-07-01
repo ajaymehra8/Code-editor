@@ -1,5 +1,6 @@
 import { Snippet } from '@/types/allTypes'
 import { deleteSnippet } from '@/utils/api'
+import { AxiosError } from 'axios'
 import { Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import React, { useState } from 'react'

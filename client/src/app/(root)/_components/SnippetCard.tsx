@@ -9,18 +9,10 @@ import StarButton from "@/components/StarButton";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { deleteSnippet } from "../../../utils/api";
-import { UserType } from "@/types/allTypes";
+import { Snippet} from "@/types/allTypes";
 
 interface SnippetCardProps {
-  snippet: {
-    _id: string;
-    title: string;
-    language: string;
-    user: UserType;
-    createdAt: Date;
-    code: string;
-    starredBy: string[];
-  };
+  snippet: Snippet;
 }
 const SnippetCard = ({ snippet }: SnippetCardProps) => {
   const { user, setSnippets } = useGlobalState();
@@ -96,8 +88,8 @@ const SnippetCard = ({ snippet }: SnippetCardProps) => {
               >
                 <StarButton
                   snippetId={snippet._id}
-                  isStarred={snippet.starredBy.includes(user?._id || "")}
-                  starCount={snippet.starredBy.length}
+                  isStarred={snippet.starredBy?.includes(user?._id || "")}
+                  starCount={snippet.starredBy?.length}
                 />
 
                 {/* come here after backend */}

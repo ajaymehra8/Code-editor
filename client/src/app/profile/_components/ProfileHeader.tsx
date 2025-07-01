@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { UserStatsType, UserType } from "@/types/allTypes";
-import Image from "next/image";
 
 interface ProfileHeaderProps {
   userStats: UserStatsType;
