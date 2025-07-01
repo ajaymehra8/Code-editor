@@ -2,13 +2,11 @@
 import { Github, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { useGlobalState } from "@/context/GlobalProvider";
-import { useGoogleLogin } from "@react-oauth/google";
-import { getOtp, googleLogin, login, signup, verifyOtp } from "../utils/api";
+import { getOtp, login, signup, verifyOtp } from "../utils/api";
 
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 const SignupModal = () => {
   const { setOpenSignupModal, setUser, setToken } = useGlobalState();
   const [email, setEmail] = useState("");
@@ -36,29 +34,7 @@ const SignupModal = () => {
     }
   }, [step]);
 
-  const responseGoogle = async (authResult) => {
-    try {
-      if (authResult?.code) {
-        const result = await googleLogin(authResult?.code);
-        if (result.data.success) {
-          const user = JSON.stringify(result?.data?.user);
-          localStorage.setItem("user", user);
-          localStorage.setItem("token", result.data.token);
-          setUser(result?.data?.user);
-          setToken(result.data.token);
-          toast.success("Login successfully");
-          setOpenSignupModal(false);
-        }
-      }
-    } catch (err) {
-      if (err instanceof AxiosError) alert(err.message);
-    }
-  };
-  const googleLoginHandle = useGoogleLogin({
-    onSuccess: responseGoogle,
-    onError: responseGoogle,
-    flow: "auth-code",
-  });
+ 
   // signup handler
   const handleSignup = async () => {
     if (step === 1) {
@@ -158,20 +134,7 @@ const SignupModal = () => {
                 <button className="rounded-full border py-1 px-5 cursor-pointer flex gap-3 text-[15px] items-center">
                   <Github /> Github
                 </button>
-                <button
-                  className="rounded-full border py-1 px-5 cursor-pointer flex gap-3 items-center text-[15px]"
-                  onClick={googleLoginHandle}
-                >
-                  <Image
-                    src={
-                      "https://img.icons8.com/?size=100&id=17949&format=png&color=000000"
-                    }
-                    alt="google-icon"
-                    width={25}
-                    height={10}
-                  />{" "}
-                  Google
-                </button>
+                
               </div>
             )}
 
@@ -266,7 +229,7 @@ const SignupModal = () => {
               Log in to Code Craft
             </h2>
             <p className="font-normal text-sm">
-              Don't have an account?{" "}
+              {"Don't have an account?"}
               <span
                 className="text-[blue] cursor-pointer font-semibold"
                 onClick={() => {
