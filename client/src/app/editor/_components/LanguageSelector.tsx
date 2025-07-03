@@ -46,7 +46,7 @@ const LanguageSelector = ({ hasAccess }: propType) => {
           />
         </div>
 
-        <span className="text-gray-200 min-w-[80px] text-left group-hover:text-white transition-colors">
+        <span className="hidden lg:block text-gray-200 min-w-[80px] text-left group-hover:text-white transition-colors">
           {currentLanguage.label}
         </span>
 

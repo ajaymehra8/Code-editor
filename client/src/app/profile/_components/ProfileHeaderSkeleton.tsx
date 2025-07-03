@@ -5,7 +5,7 @@ function ProfileHeaderSkeleton() {
      border-gray-800/50 overflow-hidden"
     >
       <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:32px]" />
-      <div className="relative flex items-center gap-8">
+      <div className="relative flex flex-col md:flex-row items-center gap-8">
         {/* Avatar Skeleton */}
         <div className="relative">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-600/20 rounded-full blur-xl" />

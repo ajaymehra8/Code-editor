@@ -36,14 +36,14 @@ if(executionResult){
             <Loader2 className="w-4 h-4 animate-spin text-white/70" />
             <div className="absolute inset-0 blur animate-pulse" />
           </div>
-          <span className="text-sm font-medium text-white/90">Executing...</span>
+          <span className="text-sm font-medium text-white/90 hidden lg:block">Executing...</span>
         </>
       ) : (
         <>
           <div className="relative flex items-center justify-center w-4 h-4">
             <PlayIcon className="w-4 h-4 text-white/90 transition-transform group-hover:scale-110 group-hover:text-white" />
           </div>
-          <span className="text-sm font-medium text-white/90 group-hover:text-white">
+          <span className="hidden lg:block text-sm font-medium text-white/90 group-hover:text-white">
             Run Code
           </span>
         </>

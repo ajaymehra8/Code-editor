@@ -33,7 +33,7 @@ function ThemeSelector() {
 
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative hidden lg:block" ref={dropdownRef}>
       <motion.button
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}

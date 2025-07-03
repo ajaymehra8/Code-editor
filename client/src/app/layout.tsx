@@ -18,6 +18,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "CodeCraft",
   description: "A online code sharing platform.",
+  icons:{
+    icon:'./favicon.jpg'
+  }
 };
 
 export default function RootLayout({

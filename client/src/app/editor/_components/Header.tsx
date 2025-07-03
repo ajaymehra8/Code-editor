@@ -13,10 +13,10 @@ const Header = () => {
   return (
     <div className="relative z-10">
       <div
-        className="flex items-center lg:justify-between justify-center 
+        className="flex items-center justify-between
         bg-[#0a0a0f]/80 backdrop-blur-xl p-6 mb-4 rounded-lg"
       >
-        <div className="hidden lg:flex items-center gap-8">
+        <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-3 group relative">
             {/* Logo hover effect */}
 
@@ -33,7 +33,7 @@ const Header = () => {
               <Blocks className="size-6 text-blue-400 transform -rotate-6 group-hover:rotate-0 transition-transform duration-500" />
             </div>
 
-            <div className="flex flex-col">
+            <div className="hidden lg:flex lg:flex-col">
               <span className="block text-lg font-semibold bg-gradient-to-r from-blue-400 via-blue-300 to-purple-400 text-transparent bg-clip-text">
                 CodeCraft
               </span>
@@ -46,11 +46,11 @@ const Header = () => {
           <nav className="flex items-center space-x-1">
             <Link
               href="/"
-              className="relative group flex items-center gap-2 px-4 py-1.5 rounded-lg text-gray-300 bg-gray-800/50 
+              className="hidden lg:flex relative group lg:items-center lg:gap-2 px-4 py-1.5 rounded-lg text-gray-300 bg-gray-800/50 
                 hover:bg-blue-500/10 border border-gray-800 hover:border-blue-500/50 transition-all duration-300 shadow-lg overflow-hidden"
             >
               <div
-                className="absolute inset-0 bg-gradient-to-r from-blue-500/10 
+                className=" absolute inset-0 bg-gradient-to-r from-blue-500/10 
                 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
               />
               <Code2 className="w-4 h-4 relative z-10 group-hover:rotate-3 transition-transform" />
@@ -72,7 +72,7 @@ const Header = () => {
           {user && !user?.isPro && (
             <Link
               href="/pricing"
-              className="flex items-center gap-2 px-4 py-1.5 rounded-lg border border-amber-500/20 hover:border-amber-500/40 bg-gradient-to-r from-amber-500/10 
+              className="hidden lg:flex items-center gap-2 px-4 py-1.5 rounded-lg border border-amber-500/20 hover:border-amber-500/40 bg-gradient-to-r from-amber-500/10 
                 to-orange-500/10 hover:from-amber-500/20 hover:to-orange-500/20 
                 transition-all duration-300"
             >
@@ -100,7 +100,7 @@ const Header = () => {
               <div className="relative flex items-center justify-center w-4 h-4">
                 <LogIn className="w-4 h-4 text-white/90 transition-transform group-hover:scale-110 group-hover:text-white" />
               </div>
-              <span className="text-sm font-medium text-white/90 group-hover:text-white">
+              <span className="hidden lg:block text-sm font-medium text-white/90 group-hover:text-white">
                 Sign In
               </span>{" "}
               </div>

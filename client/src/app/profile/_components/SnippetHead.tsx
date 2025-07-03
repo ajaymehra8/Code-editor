@@ -42,10 +42,10 @@ const SnippetHead = ({snippet,setSnippets}:{snippet:Snippet,setSnippets:React.Di
                             </div>
                             <div className="space-y-1">
                               <div className="flex items-center gap-2">
-                                <span className="text-sm font-medium text-white">
+                                <span className="hidden lg:block text-sm font-medium text-white">
                                   {snippet.language.toUpperCase()}
                                 </span>
-                                <span className="text-xs text-gray-400">•</span>
+                                <span className="hidden lg:block text-xs text-gray-400">•</span>
                                 <span className="text-xs text-gray-400">
                                   {new Date(snippet.createdAt).toLocaleString()}
                                 </span>

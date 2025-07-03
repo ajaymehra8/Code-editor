@@ -182,7 +182,7 @@ const SnippetPage = () => {
                 </span>
 
                 {/* View Toggle */}
-                <div className="flex items-center gap-1 p-1 bg-[#1e1e2e] rounded-lg ring-1 ring-gray-800">
+                <div className="hidden lg:flex items-center gap-1 p-1 bg-[#1e1e2e] rounded-lg ring-1 ring-gray-800">
                   <button
                     onClick={() => setView("grid")}
                     className={`p-2 rounded-md transition-all ${
