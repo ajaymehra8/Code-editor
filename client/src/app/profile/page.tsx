@@ -182,7 +182,7 @@ const ProfilePage = () => {
                     snippets?.map((snippet) => (
                       <div
                         key={snippet._id}
-                        className="group rounded-xl overflow-hidden transition-all duration-300 hover:border-blue-500/50 hover:shadow-md hover:shadow-blue-500/50"
+                        className="group rounded-xl overflow-hidden transition-all duration-300  hover:shadow-md"
                       >
                         <SnippetHead
                           snippet={snippet}

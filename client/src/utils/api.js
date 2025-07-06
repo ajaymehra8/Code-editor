@@ -62,6 +62,9 @@ export const deleteSnippet = (snippetId) =>
   API.delete(`/api/v1/snippet?snippetId=${snippetId}`);
 export const starSnippet = (snippetId) =>
   API.post(`/api/v1/snippet/star-snippet`, { snippetId });
+export const updateSnippet = (snippetId) =>
+  API.post(`/api/v1/snippet/update-snippet`, { snippetId });
+
 
 // user profile apis
 export const getUserStats = () => API.get(`/api/v1/user/user-stats`);
